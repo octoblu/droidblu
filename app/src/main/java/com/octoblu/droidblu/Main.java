@@ -51,7 +51,7 @@ public class Main extends Activity
 
 //        MqttAndroidClient yourMom = new MqttAndroidClient(this.getApplicationContext(), "tcp://meshblu.octoblu.com:1883", "yourMom");
         final MqttAndroidClient mqttAndroidClient = new MqttAndroidClient(this.getApplicationContext(), "tcp://192.168.112.128:1883", "yourMom");
-        mqttAndroidClient.setCallback(this);
+//        mqttAndroidClient.setCallback(this);
         try {
             MqttConnectOptions options = new MqttConnectOptions();
             options.setUserName("bce15650-2fc3-11e4-bb6b-0d33aad5b861"); // Meshblu UUID
