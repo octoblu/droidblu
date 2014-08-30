@@ -27,6 +27,7 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 public class Main extends Activity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks , MqttCallback{
 
+
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
      */
@@ -36,6 +37,7 @@ public class Main extends Activity
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
      */
     private CharSequence mTitle;
+    private MqttAndroidClient mqttAndroidClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +56,7 @@ public class Main extends Activity
 
 //        MqttAndroidClient yourMom = new MqttAndroidClient(this.getApplicationContext(), "tcp://meshblu.octoblu.com:1883", "yourMom");
         final MqttAndroidClient mqttAndroidClient = new MqttAndroidClient(this.getApplicationContext(), "tcp://192.168.112.128:1883", "yourMom");
+        setMqttAndroidClient(mqttAndroidClient);
         mqttAndroidClient.setCallback(this);
         try {
             MqttConnectOptions options = new MqttConnectOptions();
@@ -151,6 +154,10 @@ public class Main extends Activity
     @Override
     public void messageArrived(String s, MqttMessage mqttMessage) throws Exception {
         Log.i("mqtt", mqttMessage.toString());
+
+        MqttAndroidClient mqttAndroidClient = getMqttAndroidClient();
+        String json = "{\"devices\": [\"3cc5df60-2f99-11e4-96a1-89ac5135be97\"], \"payload\": \"Hello\"}";
+        mqttAndroidClient.publish("message", json.getBytes(), 0, true);
     }
 
     @Override
@@ -158,6 +165,15 @@ public class Main extends Activity
         Log.i("mqtt", "deliverComplete");
     }
     // END MESSAGE HANDLING
+
+    public void setMqttAndroidClient(MqttAndroidClient mqttAndroidClient) {
+        this.mqttAndroidClient = mqttAndroidClient;
+    }
+
+    public MqttAndroidClient getMqttAndroidClient() {
+        return mqttAndroidClient;
+    }
+
 
     /**
      * A placeholder fragment containing a simple view.
