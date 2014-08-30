@@ -16,13 +16,16 @@ import android.view.ViewGroup;
 import android.support.v4.widget.DrawerLayout;
 
 import org.eclipse.paho.client.mqttv3.IMqttActionListener;
+import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.IMqttToken;
+import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
+import org.eclipse.paho.client.mqttv3.MqttMessage;
 
 
 public class Main extends Activity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks {
+        implements NavigationDrawerFragment.NavigationDrawerCallbacks , MqttCallback{
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -51,7 +54,7 @@ public class Main extends Activity
 
 //        MqttAndroidClient yourMom = new MqttAndroidClient(this.getApplicationContext(), "tcp://meshblu.octoblu.com:1883", "yourMom");
         final MqttAndroidClient mqttAndroidClient = new MqttAndroidClient(this.getApplicationContext(), "tcp://192.168.112.128:1883", "yourMom");
-//        mqttAndroidClient.setCallback(this);
+        mqttAndroidClient.setCallback(this);
         try {
             MqttConnectOptions options = new MqttConnectOptions();
             options.setUserName("bce15650-2fc3-11e4-bb6b-0d33aad5b861"); // Meshblu UUID
@@ -136,6 +139,25 @@ public class Main extends Activity
         }
         return super.onOptionsItemSelected(item);
     }
+
+
+    /// MESSAGE HANDLING
+    @Override
+    public void connectionLost(Throwable throwable) {
+        Log.e("mqtt", "connectionLost");
+        throwable.printStackTrace();
+    }
+
+    @Override
+    public void messageArrived(String s, MqttMessage mqttMessage) throws Exception {
+        Log.i("mqtt", mqttMessage.toString());
+    }
+
+    @Override
+    public void deliveryComplete(IMqttDeliveryToken iMqttDeliveryToken) {
+        Log.i("mqtt", "deliverComplete");
+    }
+    // END MESSAGE HANDLING
 
     /**
      * A placeholder fragment containing a simple view.
