@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.app.ActionBar;
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,6 +13,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.support.v4.widget.DrawerLayout;
+
+import com.octoblu.droidblu.service.Meshblu;
+import com.octoblu.droidblu.service.MeshbluConnectionHandler;
+import com.octoblu.droidblu.service.MeshbluMessageHandler;
+import com.octoblu.droidblu.service.MqttAndroidClient;
 
 import org.eclipse.paho.client.mqttv3.IMqttActionListener;
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
@@ -25,7 +29,7 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 
 
 public class Main extends Activity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks , MqttCallback{
+        implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
 
     /**
@@ -37,7 +41,8 @@ public class Main extends Activity
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
      */
     private CharSequence mTitle;
-    private MqttAndroidClient mqttAndroidClient;
+
+    private final String TAG = "meshblu";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,38 +58,7 @@ public class Main extends Activity
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
 
-
-//        MqttAndroidClient yourMom = new MqttAndroidClient(this.getApplicationContext(), "tcp://meshblu.octoblu.com:1883", "yourMom");
-        final MqttAndroidClient mqttAndroidClient = new MqttAndroidClient(this.getApplicationContext(), "tcp://192.168.112.128:1883", "yourMom");
-        setMqttAndroidClient(mqttAndroidClient);
-        mqttAndroidClient.setCallback(this);
-        try {
-            MqttConnectOptions options = new MqttConnectOptions();
-            options.setUserName("bce15650-2fc3-11e4-bb6b-0d33aad5b861"); // Meshblu UUID
-            options.setPassword("00zt29jsy4fp8n0zfr4nj987iecul3di".toCharArray()); // Meshblu Token
-            options.setCleanSession(true);
-
-            IMqttToken mqttToken = mqttAndroidClient.connect(options, "", new IMqttActionListener() {
-                @Override
-                public void onSuccess(IMqttToken iMqttToken) {
-                    Log.d("mqtt", "Dudez, I'm connected!");
-                    try {
-                        mqttAndroidClient.subscribe("bce15650-2fc3-11e4-bb6b-0d33aad5b861", 0);
-                    } catch (MqttException e) {
-                        e.printStackTrace();
-                    }
-                }
-
-                @Override
-                public void onFailure(IMqttToken iMqttToken, Throwable throwable) {
-                    throwable.printStackTrace();
-                    Log.e("mqtt", "Dudez, we need to talk");
-                }
-            });
-        } catch (MqttException e) {
-            e.printStackTrace();
-        }
-
+        meshbluStartMessaging();
     }
 
     @Override
@@ -143,37 +117,35 @@ public class Main extends Activity
         return super.onOptionsItemSelected(item);
     }
 
+    private void meshbluStartMessaging(){
+        final String uuid  = "bce15650-2fc3-11e4-bb6b-0d33aad5b861";
+        final String token = "00zt29jsy4fp8n0zfr4nj987iecul3di";
 
-    /// MESSAGE HANDLING
-    @Override
-    public void connectionLost(Throwable throwable) {
-        Log.e("mqtt", "connectionLost");
-        throwable.printStackTrace();
-    }
+        final Meshblu meshblu = new Meshblu(this.getApplicationContext(), "tcp://meshblu.octoblu.com:1883");
+        meshblu.connect(uuid, token, new MeshbluConnectionHandler(){
+            @Override
+            public void onSuccess()  {
+                Log.i(TAG, "connected");
+            }
 
-    @Override
-    public void messageArrived(String s, MqttMessage mqttMessage) throws Exception {
-        Log.i("mqtt", mqttMessage.toString());
+            @Override
+            public void onFailure(Throwable throwable) {
+                Log.e(TAG, "Failed to connect");
+                Log.d(TAG, throwable.toString());
+            }
+        });
 
-        MqttAndroidClient mqttAndroidClient = getMqttAndroidClient();
-        String json = "{\"devices\": [\"3cc5df60-2f99-11e4-96a1-89ac5135be97\"], \"payload\": \"Hello\"}";
-        mqttAndroidClient.publish("message", json.getBytes(), 0, true);
-    }
+        meshblu.onMessage(new MeshbluMessageHandler(){
+            @Override
+            public void onMessage(String sourceUUID, String payload) {
+                Log.i(TAG, "Received message: " + payload);
 
-    @Override
-    public void deliveryComplete(IMqttDeliveryToken iMqttDeliveryToken) {
-        Log.i("mqtt", "deliverComplete");
-    }
-    // END MESSAGE HANDLING
-
-    public void setMqttAndroidClient(MqttAndroidClient mqttAndroidClient) {
-        this.mqttAndroidClient = mqttAndroidClient;
-    }
-
-    public MqttAndroidClient getMqttAndroidClient() {
-        return mqttAndroidClient;
-    }
-
+                String toUUID = uuid;
+                String toPayload = "Hey bro";
+                meshblu.message(toUUID, toPayload);
+            }
+        });
+    };
 
     /**
      * A placeholder fragment containing a simple view.
