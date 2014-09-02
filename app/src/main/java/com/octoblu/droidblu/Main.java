@@ -110,8 +110,7 @@ public class Main extends Activity
     private void meshbluStartMessaging(){
         final String uuid  = "bce15650-2fc3-11e4-bb6b-0d33aad5b861";
         final String token = "00zt29jsy4fp8n0zfr4nj987iecul3di";
-//        final String host  = "tcp://meshblu.octoblu.com:1883";
-        final String host  = "tcp://192.168.112.128:1883";
+        final String host  = "tcp://meshblu.octoblu.com:1883";
 
         Log.d(TAG, "about to connect");
         final Meshblu meshblu = new Meshblu(this.getApplicationContext(), host);
