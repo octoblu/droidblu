@@ -22,5 +22,6 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:support-v4:20.0.0'
-    compile project(':meshblu.client')
+    compile files('libs/meshblu.client.jar')
+    compile files('libs/org.eclipse.paho.mqtt.utility-1.0.0.jar')
 }

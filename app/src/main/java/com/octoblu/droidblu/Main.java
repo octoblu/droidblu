@@ -140,7 +140,7 @@ public class Main extends Activity
                 Log.d(TAG, "topic: " + topic);
                 Log.d(TAG, "payload: " + payload);
 
-                String toUUID = uuid;
+                String toUUID = "Some UUID";
                 String toTopic = "Droidblu topic";
                 String toPayload = "Hey bro";
                 meshblu.message(toUUID, toTopic, toPayload);
