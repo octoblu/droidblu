@@ -10,7 +10,7 @@
  * and the Eclipse Distribution License is available at 
  *   http://www.eclipse.org/org/documents/edl-v10.php.
  */
-package com.octoblu.droidblu.service;
+package com.octoblu.meshblu.client;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -90,7 +90,7 @@ public class MqttAndroidClient extends BroadcastReceiver implements
         MANUAL_ACK
     }
 
-    private static final String SERVICE_NAME = "com.octoblu.droidblu.service.MqttService";
+    private static final String SERVICE_NAME = "com.octoblu.meshblu.client.MqttService";
 
     private static final int BIND_SERVICE_FLAG = 0;
 

@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Droidblu.iml" filepath="$PROJECT_DIR$/Droidblu.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/meshblu.client/meshblu.client.iml" filepath="$PROJECT_DIR$/meshblu.client/meshblu.client.iml" />
     </modules>
   </component>
 </project>

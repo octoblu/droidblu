@@ -10,24 +10,18 @@
  * and the Eclipse Distribution License is available at 
  *   http://www.eclipse.org/org/documents/edl-v10.php.
  */
-package com.octoblu.droidblu.service;
+package com.octoblu.meshblu.client;
 
 /**
- * Enumeration representing the success or failure of an operation
+ * Interface for simple trace handling
+ *
  */
-public enum Status {
-	/**
-	 * Indicates that the operation succeeded
-	 */
-	OK, 
+public interface MqttTraceHandler {
+
+	public abstract void traceDebug(String source, String message);
+
+	public abstract void traceError(String source, String message);
 	
-	/**
-	 * Indicates that the operation failed
-	 */
-	ERROR,
-	
-	/**
-	 * Indicates that the operation's result may be returned asynchronously
-	 */
-	NO_RESULT
+	public abstract void traceException(String source, String message, Exception e);
+
 }

@@ -1,4 +1,4 @@
-package com.octoblu.droidblu.service;
+package com.octoblu.meshblu.client;
 
 public interface MeshbluConnectionHandler {
     public void onSuccess();

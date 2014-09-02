@@ -14,19 +14,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.support.v4.widget.DrawerLayout;
 
-import com.octoblu.droidblu.service.Meshblu;
-import com.octoblu.droidblu.service.MeshbluConnectionHandler;
-import com.octoblu.droidblu.service.MeshbluMessageHandler;
-import com.octoblu.droidblu.service.MqttAndroidClient;
-
-import org.eclipse.paho.client.mqttv3.IMqttActionListener;
-import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
-import org.eclipse.paho.client.mqttv3.IMqttToken;
-import org.eclipse.paho.client.mqttv3.MqttCallback;
-import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
-import org.eclipse.paho.client.mqttv3.MqttException;
-import org.eclipse.paho.client.mqttv3.MqttMessage;
-
+import com.octoblu.meshblu.client.Meshblu;
+import com.octoblu.meshblu.client.MeshbluConnectionHandler;
+import com.octoblu.meshblu.client.MeshbluMessageHandler;
 
 public class Main extends Activity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {

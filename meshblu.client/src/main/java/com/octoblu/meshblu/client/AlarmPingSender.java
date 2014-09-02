@@ -10,7 +10,7 @@
  * and the Eclipse Distribution License is available at 
  *   http://www.eclipse.org/org/documents/edl-v10.php.
  */
-package com.octoblu.droidblu.service;
+package com.octoblu.meshblu.client;
 
 import org.eclipse.paho.client.mqttv3.IMqttActionListener;
 import org.eclipse.paho.client.mqttv3.IMqttToken;
@@ -26,7 +26,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
-import android.util.Log;
 
 /**
  * Default ping sender implementation on Android. It is based on AlarmManager.

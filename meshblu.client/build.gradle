@@ -1,11 +1,11 @@
-apply plugin: 'com.android.application'
+apply plugin: 'com.android.library'
 
 android {
     compileSdkVersion 20
     buildToolsVersion '20.0.0'
 
     defaultConfig {
-        applicationId "com.octoblu.droidblu"
+        applicationId "com.octoblu.meshblu.client"
         minSdkVersion 15
         targetSdkVersion 20
         versionCode 1
@@ -21,6 +21,5 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:support-v4:20.0.0'
-    compile project(':meshblu.client')
+    compile files('libs/org.eclipse.paho.mqtt.utility-1.0.0.jar')
 }

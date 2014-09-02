@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="Encoding" useUTFGuessing="true" native2AsciiForPropertiesFiles="false">
-    <file url="file://$PROJECT_DIR$/app/src/main/java/com/octoblu/droidblu/service/AlarmPingSender.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/app/src/main/java/com/octoblu/droidblu/service/DatabaseMessageStore.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/app/src/main/java/com/octoblu/droidblu/service/MessageStore.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/app/src/main/java/com/octoblu/droidblu/service/MqttConnection.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/app/src/main/java/com/octoblu/droidblu/service/MqttDeliveryTokenAndroid.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/app/src/main/java/com/octoblu/droidblu/service/MqttService.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/app/src/main/java/com/octoblu/droidblu/service/MqttServiceBinder.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/app/src/main/java/com/octoblu/droidblu/service/MqttServiceConstants.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/app/src/main/java/com/octoblu/droidblu/service/MqttTokenAndroid.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/app/src/main/java/com/octoblu/droidblu/service/MqttTraceHandler.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/app/src/main/java/com/octoblu/droidblu/service/ParcelableMqttMessage.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/app/src/main/java/com/octoblu/droidblu/service/Status.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/meshblu.client/src/main/java/com/octoblu/meshblu/client/AlarmPingSender.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/meshblu.client/src/main/java/com/octoblu/meshblu/client/DatabaseMessageStore.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/meshblu.client/src/main/java/com/octoblu/meshblu/client/MessageStore.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/meshblu.client/src/main/java/com/octoblu/meshblu/client/MqttConnection.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/meshblu.client/src/main/java/com/octoblu/meshblu/client/MqttDeliveryTokenAndroid.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/meshblu.client/src/main/java/com/octoblu/meshblu/client/MqttService.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/meshblu.client/src/main/java/com/octoblu/meshblu/client/MqttServiceBinder.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/meshblu.client/src/main/java/com/octoblu/meshblu/client/MqttServiceConstants.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/meshblu.client/src/main/java/com/octoblu/meshblu/client/MqttTokenAndroid.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/meshblu.client/src/main/java/com/octoblu/meshblu/client/MqttTraceHandler.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/meshblu.client/src/main/java/com/octoblu/meshblu/client/ParcelableMqttMessage.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/meshblu.client/src/main/java/com/octoblu/meshblu/client/Status.java" charset="UTF-8" />
   </component>
 </project>
 

@@ -1,7 +1,6 @@
-package com.octoblu.droidblu.service;
+package com.octoblu.meshblu.client;
 
 import android.content.Context;
-import android.util.Log;
 
 import org.eclipse.paho.client.mqttv3.IMqttActionListener;
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
