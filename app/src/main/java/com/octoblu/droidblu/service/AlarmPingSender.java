@@ -68,7 +68,6 @@ public class AlarmPingSender implements MqttPingSender {
 	public void start() {
 		String action = MqttServiceConstants.PING_SENDER
 				+ comms.getClient().getClientId();
-		Log.d(TAG, "Register alarmreceiver to MqttService"+ action);
 		service.registerReceiver(alarmReceiver, new IntentFilter(action));
 
 		pendingIntent = PendingIntent.getBroadcast(service, 0, new Intent(
@@ -85,7 +84,6 @@ public class AlarmPingSender implements MqttPingSender {
 				.getSystemService(Service.ALARM_SERVICE);
 		alarmManager.cancel(pendingIntent);
 
-		Log.d(TAG, "Unregister alarmreceiver to MqttService"+comms.getClient().getClientId());
 		if(hasStarted){
 			hasStarted = false;
 			try{
@@ -100,7 +98,6 @@ public class AlarmPingSender implements MqttPingSender {
 	public void schedule(long delayInMilliseconds) {
 		long nextAlarmInMilliseconds = System.currentTimeMillis()
 				+ delayInMilliseconds;
-		Log.d(TAG, "Schedule next alarm at " + nextAlarmInMilliseconds);
 		AlarmManager alarmManager = (AlarmManager) service
 				.getSystemService(Service.ALARM_SERVICE);
 		alarmManager.set(AlarmManager.RTC_WAKEUP, nextAlarmInMilliseconds,
@@ -123,9 +120,6 @@ public class AlarmPingSender implements MqttPingSender {
 			// finished handling the broadcast.", but this class still get
 			// a wake lock to wait for ping finished.
 			int count = intent.getIntExtra(Intent.EXTRA_ALARM_COUNT, -1);
-			Log.d(TAG, "Ping " + count + " times.");
-
-			Log.d(TAG, "Check time :" + System.currentTimeMillis());
 			IMqttToken token = comms.checkForActivity();
 
 			// No ping has been sent.
@@ -147,8 +141,6 @@ public class AlarmPingSender implements MqttPingSender {
 
 				@Override
 				public void onSuccess(IMqttToken asyncActionToken) {
-					Log.d(TAG, "Success. Release lock(" + wakeLockTag + "):"
-							+ System.currentTimeMillis());
 					//Release wakelock when it is done.
 					if(wakelock != null && wakelock.isHeld()){
 						wakelock.release();
@@ -158,8 +150,6 @@ public class AlarmPingSender implements MqttPingSender {
 				@Override
 				public void onFailure(IMqttToken asyncActionToken,
 						Throwable exception) {
-					Log.d(TAG, "Failure. Release lock(" + wakeLockTag + "):"
-							+ System.currentTimeMillis());
 					//Release wakelock when it is done.
 					if(wakelock != null && wakelock.isHeld()){
 						wakelock.release();

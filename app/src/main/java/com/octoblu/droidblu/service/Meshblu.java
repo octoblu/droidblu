@@ -10,10 +10,19 @@ import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Meshblu {
+    public static final String FROM_UUID = "fromUuid";
+    public static final String TOPIC = "topic";
+    public static final String PAYLOAD = "payload";
+    public static final String DATA = "data";
+    public static final String DEVICES = "devices";
     private final String CLIENT_ID = "meshblu-client";
     private final MqttAndroidClient mqttAndroidClient;
     private final ArrayList<MeshbluMessageHandler> messageHandlers;
@@ -39,10 +48,20 @@ public class Meshblu {
         this.messageHandlers.add(meshbluMessageHandler);
     }
 
-    public void message(String toUUID, String payload) throws MeshbluException {
-        String json = "{\"devices\": [\"3cc5df60-2f99-11e4-96a1-89ac5135be97\"], \"payload\": \"Hello\"}";
+    public void message(String toUUID, String topic, String payload) throws MeshbluException {
         try {
-            mqttAndroidClient.publish("message", json.getBytes(), 0, true);
+            JSONObject message = new JSONObject();
+            JSONArray devices = new JSONArray();
+            devices.put(toUUID);
+            message.put(DEVICES, devices);
+            message.put(PAYLOAD, payload);
+            message.put(TOPIC,   topic);
+
+            String messageString = message.toString();
+
+            mqttAndroidClient.publish("message", messageString.getBytes(), 0, true);
+        } catch (JSONException e) {
+            throw new MeshbluException(e);
         } catch (MqttException e) {
             throw new MeshbluException(e);
         }
@@ -54,6 +73,18 @@ public class Meshblu {
         options.setPassword(token.toCharArray());
         options.setCleanSession(true);
         return options;
+    }
+
+    private HashMap<String, String> parseMessage(String messageJSON) throws JSONException {
+        HashMap<String, String> map = new HashMap<String, String>();
+        JSONObject message = new JSONObject(messageJSON);
+        JSONObject data    = message.getJSONObject(DATA);
+
+        map.put(FROM_UUID, data.getString(FROM_UUID));
+        map.put(TOPIC, data.getString(TOPIC));
+        map.put(PAYLOAD, data.getString(PAYLOAD));
+
+        return map;
     }
 
     private class MeshbluMqttConnectCallback implements IMqttActionListener {
@@ -70,6 +101,8 @@ public class Meshblu {
             } catch (MqttException exception) {
                 meshbluConnectionHandler.onFailure(new Throwable("Failed to connect to Meshblu", exception));
             }
+
+            meshbluConnectionHandler.onSuccess();
         }
 
         @Override
@@ -87,10 +120,16 @@ public class Meshblu {
 
         @Override
         public void messageArrived(String s, MqttMessage mqttMessage) {
-            String message = mqttMessage.toString();
+            HashMap<String, String> message;
+
+            try {
+                message = parseMessage(mqttMessage.toString());
+            } catch (JSONException e) {
+                throw new MeshbluException(e);
+            }
 
             for(MeshbluMessageHandler messageHandler : messageHandlers) {
-                messageHandler.onMessage("some uuid", message);
+                messageHandler.onMessage(message.get(FROM_UUID), message.get(TOPIC), message.get(PAYLOAD));
             }
         }
 
