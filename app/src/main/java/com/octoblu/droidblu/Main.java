@@ -16,6 +16,7 @@ import android.support.v4.widget.DrawerLayout;
 
 import com.octoblu.meshblu.client.Meshblu;
 import com.octoblu.meshblu.client.MeshbluConnectionHandler;
+import com.octoblu.meshblu.client.MeshbluErrorHandler;
 import com.octoblu.meshblu.client.MeshbluMessageHandler;
 
 public class Main extends Activity
@@ -110,7 +111,8 @@ public class Main extends Activity
     private void meshbluStartMessaging(){
         final String uuid  = "bce15650-2fc3-11e4-bb6b-0d33aad5b861";
         final String token = "00zt29jsy4fp8n0zfr4nj987iecul3di";
-        final String host  = "tcp://meshblu.octoblu.com:1883";
+//        final String host  = "tcp://meshblu.octoblu.com:1883";
+        final String host  = "tcp://192.168.112.128:1883";
 
         Log.d(TAG, "about to connect");
         final Meshblu meshblu = new Meshblu(this.getApplicationContext(), host);
@@ -118,9 +120,9 @@ public class Main extends Activity
             @Override
             public void onSuccess()  {
                 Log.i(TAG, "connected");
-                String toUUID = "Some uuid";
+                String toUUID = uuid;
                 String toTopic = "Droidblu topic";
-                String toPayload = "Hey bro";
+                String toPayload = "Hey bro, I connected";
                 meshblu.message(toUUID, toTopic, toPayload);
             }
 
@@ -139,11 +141,20 @@ public class Main extends Activity
                 Log.d(TAG, "topic: " + topic);
                 Log.d(TAG, "payload: " + payload);
 
-                String toUUID = "Some UUID";
+                String toUUID = "*";
                 String toTopic = "Droidblu topic";
                 String toPayload = "Hey bro";
                 meshblu.message(toUUID, toTopic, toPayload);
             }
+        });
+
+        meshblu.onError(new MeshbluErrorHandler() {
+           @Override
+           public void onError(Throwable throwable) {
+               Log.e(TAG, throwable.getMessage());
+               Log.d(TAG, throwable.toString());
+               throw new RuntimeException(throwable);
+           }
         });
     };
 

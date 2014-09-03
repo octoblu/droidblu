@@ -1,6 +1,7 @@
 package com.octoblu.meshblu.client;
 
 import android.content.Context;
+import android.util.Log;
 
 import org.eclipse.paho.client.mqttv3.IMqttActionListener;
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
@@ -15,6 +16,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.UUID;
 
 public class Meshblu {
     public static final String FROM_UUID = "fromUuid";
@@ -22,13 +24,17 @@ public class Meshblu {
     public static final String PAYLOAD = "payload";
     public static final String DATA = "data";
     public static final String DEVICES = "devices";
-    private final String CLIENT_ID = "meshblu-client";
+    private final String CLIENT_ID = "droidblu-";
     private final MqttAndroidClient mqttAndroidClient;
     private final ArrayList<MeshbluMessageHandler> messageHandlers;
+    private final ArrayList<MeshbluErrorHandler> errorHandlers;
 
     public Meshblu(Context applicationContext, String host) {
         this.messageHandlers = new ArrayList<MeshbluMessageHandler>();
-        this.mqttAndroidClient = new MqttAndroidClient(applicationContext, host, CLIENT_ID);
+        this.errorHandlers = new ArrayList<MeshbluErrorHandler>();
+        String clientUuid = CLIENT_ID + UUID.randomUUID().toString();
+        this.mqttAndroidClient = new MqttAndroidClient(applicationContext, host, clientUuid);
+        Log.d("mqtt", "UUID: " + clientUuid);
     }
 
     public void connect(String uuid, String token, final MeshbluConnectionHandler meshbluConnectionHandler) {
@@ -41,6 +47,10 @@ public class Meshblu {
         } catch (MqttException exception) {
             meshbluConnectionHandler.onFailure(new Throwable("Failed to connect to Meshblu", exception));
         }
+    }
+
+    public void onError(MeshbluErrorHandler meshbluErrorHandler) {
+        this.errorHandlers.add(meshbluErrorHandler);
     }
 
     public void onMessage(MeshbluMessageHandler meshbluMessageHandler) {
@@ -60,9 +70,9 @@ public class Meshblu {
 
             mqttAndroidClient.publish("message", messageString.getBytes(), 0, true);
         } catch (JSONException e) {
-            throw new MeshbluException(e);
+            publishError(e);
         } catch (MqttException e) {
-            throw new MeshbluException(e);
+            publishError(e);
         }
     }
 
@@ -79,11 +89,17 @@ public class Meshblu {
         JSONObject message = new JSONObject(messageJSON);
         JSONObject data    = message.getJSONObject(DATA);
 
-        map.put(FROM_UUID, data.getString(FROM_UUID));
-        map.put(TOPIC, data.getString(TOPIC));
-        map.put(PAYLOAD, data.getString(PAYLOAD));
+        map.put(FROM_UUID, data.has(FROM_UUID) ? data.getString(FROM_UUID) : null);
+        map.put(TOPIC,     data.has(TOPIC)     ? data.getString(TOPIC)     : null);
+        map.put(PAYLOAD,   data.has(PAYLOAD)   ? data.getString(PAYLOAD)   : null);
 
         return map;
+    }
+
+    private void publishError(Throwable throwable){
+        for(MeshbluErrorHandler errorHandler : errorHandlers){
+            errorHandler.onError(throwable);
+        }
     }
 
     private class MeshbluMqttConnectCallback implements IMqttActionListener {
@@ -114,7 +130,7 @@ public class Meshblu {
     private class MeshbluMqttMessageCallback implements MqttCallback {
         @Override
         public void connectionLost(Throwable throwable) {
-
+            publishError(throwable);
         }
 
         @Override
@@ -124,7 +140,8 @@ public class Meshblu {
             try {
                 message = parseMessage(mqttMessage.toString());
             } catch (JSONException e) {
-                throw new MeshbluException(e);
+                publishError(e);
+                return;
             }
 
             for(MeshbluMessageHandler messageHandler : messageHandlers) {
