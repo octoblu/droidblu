@@ -6,7 +6,7 @@ Android client library for connecting with [Meshblu](http://meshblu.octoblu.com)
 Install
 -------
 
-1. Place [meshblu.client.jar](https://github.com/octoblu/droidblu/releases/download/v1.0.0/meshblu.client.jar) in your project `libs` folder.
+1. Place [meshblu.client.jar](https://github.com/octoblu/droidblu/releases/download/v1.1.0/meshblu.client.jar) in your project `libs` folder.
 2. Place [org.eclipse.paho.mqtt.utility-1.0.0.jar](http://repo.eclipse.org/content/repositories/paho-releases/org/eclipse/paho/org.eclipse.paho.client.mqttv3/1.0.0/org.eclipse.paho.client.mqttv3-1.0.0.jar) in your project `libs` folder.
 3. Add both jars as libraries (In Android Studio, right click .jar and 'Add As Library')
 
@@ -40,6 +40,13 @@ meshblu.onMessage(new MeshbluMessageHandler() {
     public void onMessage(String fromUuid, String topic, String payload) {
     }
 });
+
+meshblu.onError(new MeshbluErrorHandler() {
+   @Override
+   public void onError(Throwable throwable) {
+   }
+});
+
 ```
 
 
