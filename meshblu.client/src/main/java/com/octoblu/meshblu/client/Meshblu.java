@@ -34,7 +34,6 @@ public class Meshblu {
         this.errorHandlers = new ArrayList<MeshbluErrorHandler>();
         String clientUuid = CLIENT_ID + UUID.randomUUID().toString();
         this.mqttAndroidClient = new MqttAndroidClient(applicationContext, host, clientUuid);
-        Log.d("mqtt", "UUID: " + clientUuid);
     }
 
     public void connect(String uuid, String token, final MeshbluConnectionHandler meshbluConnectionHandler) {
